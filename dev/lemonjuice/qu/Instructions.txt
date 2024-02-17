@@ -1,0 +1,31 @@
+PUSH
+POP
+POPLN
+PEEK
+PEEKLN
+POKE - Randomize Queue Order
+SORTUP
+SORTDOWN
+EMPTY
+
+ADD
+SUB
+
+PRINT
+READ
+
+|{specified_location}| - Creates A Specified Location
+
+IF GT:
+IF LT:
+IF EQ:
+IF NQ;
+
+GOTO {line_number}
+GOTO |{specified_location}|
+
+RET
+
+cd .\dev\lemonjuice\qu\
+g++ .\qu.cpp -o qu .\error\errorHandler.cpp .\node\node.cpp
+.\qu.exe 

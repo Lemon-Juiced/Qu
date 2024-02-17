@@ -1,0 +1,4 @@
+PUSH "Hello World"
+PUSH 78
+POPALLLN
+|HELP|
