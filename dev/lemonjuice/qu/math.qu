@@ -1,5 +1,9 @@
+PRINT "MATH"
 PUSH 1
 PUSH 2
 QDISPLAY
+ADD
+PEEKLN
+READ "Add another number: "
 ADD
 PEEKLN

@@ -85,12 +85,32 @@ void errorHandler::notEnoughArgumentsError(int line){
 }
 
 /**
- * Handles errors when a string an integer node have an incompatible operations on eachother.
+ * Handles errors when a string and integer node have an incompatible operations on eachother.
  * 
  * @param line The line of the error.
  */
 void errorHandler::operationMismatchError(int line){
     cout << "Error: Mismatched int and string operaton on : " << line << "." << endl;
+    exitProgram(-1);
+}
+
+/**
+ * Handles errors when something is passed to PRINT that cannot be printed.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::printError(int line){
+    cout << "Error: Something was attempted to be printed via PRINT that cannot be printed on line : " << line << "." << endl;
+    exitProgram(-1);
+}
+
+/**
+ * Handles errors when something is passed to READ that cannot be read.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::readError(int line){
+    cout << "Error: Something was attempted to be read via READ that cannot be read on line : " << line << "." << endl;
     exitProgram(-1);
 }
 

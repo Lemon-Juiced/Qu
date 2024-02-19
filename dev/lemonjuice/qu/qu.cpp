@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 #include <queue>
+#include <sstream>
 #include <string>
 #include <vector>
 #include "error\errorHandler.h"
@@ -188,6 +189,35 @@ int run(vector<string> program_text){
             }
         }
 
+        // PRINT
+        if (current_line.find("PRINT") != std::string::npos) {
+            std::string arg = current_line.substr(current_line.find("PRINT") + 6); // +6 to skip "PRINT "
+
+            // Attempt to convert the argument into an integer
+            bool is_integer = true;
+            try {
+                int value = std::stoi(arg);
+            } catch (std::invalid_argument&) {
+                // Conversion failed, argument is not an integer
+                is_integer = false;
+            }
+
+            if (is_integer) {
+                // Argument is an integer, print it
+                std::cout << arg << std::endl;
+            } else {
+                // Argument is not an integer, treat it as a string
+                // Check if the argument is enclosed within double quotes
+                if (arg.front() == '"' && arg.back() == '"') {
+                    arg = arg.substr(1, arg.length() - 2); // Remove the quotes
+                    std::cout << arg << std::endl;
+                } else {
+                    // Argument is not enclosed within double quotes, error
+                    error_handler.printError(i);
+                }
+            }
+        }
+
         // PUSH
         if (current_line.find("PUSH") != string::npos) {
             size_t quote_pos1 = current_line.find('\"'); // The first occurrence of '\"'
@@ -225,6 +255,38 @@ int run(vector<string> program_text){
                 if (!temp_queue.empty()) cout << ", "; // Print comma to separate elements if there are more elements in the queue
             }
             cout << endl;
+        }
+
+        // READ
+        if (current_line.find("READ") != std::string::npos) {
+            std::string arg = current_line.substr(current_line.find("READ") + 5); // +5 to skip "READ "
+
+            // Remove leading and trailing double quotes if they exist
+            if (!arg.empty() && arg.front() == '"' && arg.back() == '"') {
+                arg = arg.substr(1, arg.length() - 2);
+                std::cout << arg;
+            } else {
+                // Check if the argument is an integer
+                try {
+                    int value = std::stoi(arg);
+                    std::cout << value << " "; // Print a space after the integer
+                } catch (std::invalid_argument&) {
+                    // Conversion failed, argument is neither a string nor an integer
+                    error_handler.readError(i);
+                    continue;
+                }
+            }
+
+            // Get input from user
+            int input;
+            std::cin >> input;
+
+            if (std::cin.fail()) {
+                // Input is not an integer, print error message and exit
+                error_handler.readError(i);
+            }
+
+            program_queue.push(node(input));
         }
 
         // SUB

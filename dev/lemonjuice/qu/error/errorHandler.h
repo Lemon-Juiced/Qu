@@ -20,6 +20,10 @@ public:
 
     void operationMismatchError(int);
 
+    void printError(int);
+
+    void readError(int);
+
     void singleBarError(int, int);
     void singleQuoteError(int, int);
 
