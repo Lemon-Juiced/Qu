@@ -6,6 +6,8 @@ private:
 public:
     errorHandler();
 
+    void divideByZeroError(int);
+
     void exitProgram(int);
 
     void invalidPushError(int);
@@ -13,6 +15,8 @@ public:
     void fileExtraError(int, int);
     void fileInvalidExtensionError(std::string);
     void fileMissingError(int);
+
+    void notEnoughArgumentsError(int);
 
     void operationMismatchError(int);
 

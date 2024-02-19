@@ -12,6 +12,9 @@ QDISPLAY
 
 ADD
 SUB
+MUL
+DIV
+MOD
 
 PRINT
 READ
@@ -21,7 +24,7 @@ READ
 IF GT:
 IF LT:
 IF EQ:
-IF NQ;
+IF NQ:
 
 GOTO {line_number}
 GOTO |{specified_location}|

@@ -9,6 +9,16 @@ using namespace std;
 errorHandler::errorHandler(){}
 
 /**
+ * Handles errors when an error occurs when a division by zero happens.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::divideByZeroError(int line){
+    cout << "Error: Division by zero at line: " << line << "." << endl;
+    exitProgram(-1);
+}
+
+/**
  * Handles exiting a program when an error is encounted.
  * 
  * @param exitCode The exit code to use.
@@ -24,6 +34,7 @@ void errorHandler::exitProgram(int exitCode){
  */
 void errorHandler::invalidPushError(int line){
     cout << "Error: Invalid PUSH on: " << line << "." << endl;
+    exitProgram(-1);
 }
 
 /**
@@ -60,6 +71,16 @@ void errorHandler::fileInvalidExtensionError(std::string file_name){
  */
 void errorHandler::fileMissingError(int arg){
     cout << "Error: Missing file argument at index: " << arg << "." << endl;
+    exitProgram(-1);
+}
+
+/**
+ * Handles errors when there aren't enough arguments to successfully complete an operation.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::notEnoughArgumentsError(int line){
+    cout << "Error: Missing arguments at line : " << line << "." << endl;
     exitProgram(-1);
 }
 

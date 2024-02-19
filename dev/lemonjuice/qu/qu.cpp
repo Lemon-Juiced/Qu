@@ -22,6 +22,11 @@ map<string, int> saved_positions; // Map that stores the positions the programme
 bool fileArgChecker(int argc);
 int run(vector<string> program_text);
 bool isInteger(string str);
+void quAdd(int i);
+void quDiv(int i);
+void quMod(int i);
+void quMul(int i);
+void quSub(int i);
 
 /**
  * This is the main entryway into the interpreter.
@@ -80,6 +85,9 @@ bool fileArgChecker(int argc){
  * @return true if argc is correct, the program will error and end otherwise.
  */
 int run(vector<string> program_text){
+    // This is just for debug
+    cout << "Output Start: " << endl;
+
     // On the first run through of the program we should find all the saved positions and save to the saved_positions map<string, int>.
     for(int i = 0; i < program_text.size(); i++){
         string current_line = program_text[i];
@@ -108,30 +116,27 @@ int run(vector<string> program_text){
 
         // ADD
         if (current_line.find("ADD") != string::npos) {
-            node old_front = program_queue.front();
-            program_queue.pop();
+            quAdd(i);
+        }
 
-            node new_front = program_queue.front();
-            if (new_front.containsInt()) {
-                if (old_front.containsInt()) new_front.setInt(old_front.getInt() + new_front.getInt()); // int + int == int
-                else {
-                    // Create a new node containing the concatenation of old_front's string and new_front's string
-                    string concatenated_string = old_front.getString() + new_front.getString();
-                    new_front.setString(concatenated_string);
-                }
-            } else {
-                // Create a new node containing the concatenation of old_front's string representation of int and new_front's string
-                string concatenated_string = old_front.getIntAsString() + new_front.getString();
-                new_front.setString(concatenated_string);
-            }
-
-            // Push the new_front node back into the queue
-            program_queue.push(new_front);
+        // DIV
+        if(current_line.find("DIV") != string::npos){
+            quDiv(i);
         }
 
         // EMPTY 
         if (current_line.find("EMPTY") != string::npos) {
             (void) program_queue.empty(); // Ignoring the return value intentionally
+        }
+
+        // MOD
+        if(current_line.find("MOD") != string::npos){
+            quMod(i);
+        }
+
+        // MUL
+        if(current_line.find("MUL") != string::npos){
+            quMul(i);
         }
 
         // PEEK & PEEKLN
@@ -228,13 +233,7 @@ int run(vector<string> program_text){
 
         // SUB
         if(current_line.find("SUB") != string::npos){
-            node old_front = program_queue.front();
-            program_queue.pop();
-
-            node new_front = program_queue.front();
-            if(new_front.containsInt()){
-                if(old_front.containsInt()) new_front.setInt(old_front.getInt() - new_front.getInt()); // int - int == int
-            } else error_handler.operationMismatchError(i); //Anything else is error.
+            quSub(i);
         }
 
         // SORTUP
@@ -309,5 +308,146 @@ bool isInteger(string str){
         return true;
     } catch (...) {
         return false;
+    }
+}
+
+/**
+ * The custom ADD function for the queue
+ * 
+ * @param i The current line index in the program.
+ */
+void quAdd(int i) {
+    if (program_queue.size() < 2) {
+        // Ensure that there are at least two elements in the queue
+        error_handler.notEnoughArgumentsError(i);
+    }
+
+    node first_operand = program_queue.front();
+    program_queue.pop();
+    node second_operand = program_queue.front();
+    program_queue.pop();
+
+    if (first_operand.containsInt() && second_operand.containsInt()) {
+        // Both operands are integers, perform integer addition
+        int result = first_operand.getInt() + second_operand.getInt();
+        program_queue.push(node(result));
+    } else {
+        // At least one operand is not an integer, concatenate string representations
+        string result_str = first_operand.getString() + second_operand.getString();
+        program_queue.push(node(result_str));
+    }
+}
+
+/**
+ * The custom SUB function for the queue
+ * 
+ * @param i The current line index in the program.
+ */
+void quSub(int i) {
+    if (program_queue.size() < 2) {
+        // Ensure that there are at least two elements in the queue
+        error_handler.notEnoughArgumentsError(i);
+    }
+
+    node first_operand = program_queue.front();
+    program_queue.pop();
+    node second_operand = program_queue.front();
+    program_queue.pop();
+
+    if (first_operand.containsInt() && second_operand.containsInt()) {
+        // Both operands are integers, perform integer subtraction
+        int result = first_operand.getInt() - second_operand.getInt();
+        program_queue.push(node(result));
+    } else {
+        // Error: SUB operation is only defined for integer operands
+        error_handler.operationMismatchError(i);
+    }
+}
+
+/**
+ * The custom MUL function for the queue
+ * 
+ * @param i The current line index in the program.
+ */
+void quMul(int i) {
+    if (program_queue.size() < 2) {
+        // Ensure that there are at least two elements in the queue
+        error_handler.notEnoughArgumentsError(i);
+    }
+
+    node first_operand = program_queue.front();
+    program_queue.pop();
+    node second_operand = program_queue.front();
+    program_queue.pop();
+
+    if (first_operand.containsInt() && second_operand.containsInt()) {
+        // Both operands are integers, perform integer multiplication
+        int result = first_operand.getInt() * second_operand.getInt();
+        program_queue.push(node(result));
+    } else {
+        // Error: MUL operation is only defined for integer operands
+        error_handler.operationMismatchError(i);
+    }
+}
+
+/**
+ * The custom DIV function for the queue
+ * 
+ * @param i The current line index in the program.
+ */
+void quDiv(int i) {
+    if (program_queue.size() < 2) {
+        // Ensure that there are at least two elements in the queue
+        error_handler.notEnoughArgumentsError(i);
+    }
+
+    node first_operand = program_queue.front();
+    program_queue.pop();
+    node second_operand = program_queue.front();
+    program_queue.pop();
+
+    if (first_operand.containsInt() && second_operand.containsInt()) {
+        // Check for division by zero
+        if (second_operand.getInt() == 0) {
+            error_handler.divideByZeroError(i);
+        }
+
+        // Both operands are integers, perform integer division
+        int result = first_operand.getInt() / second_operand.getInt();
+        program_queue.push(node(result));
+    } else {
+        // Error: DIV operation is only defined for integer operands
+        error_handler.operationMismatchError(i);
+    }
+}
+
+/**
+ * The custom MOD function for the queue
+ * 
+ * @param i The current line index in the program.
+ */
+void quMod(int i) {
+    if (program_queue.size() < 2) {
+        // Ensure that there are at least two elements in the queue
+        error_handler.notEnoughArgumentsError(i);
+    }
+
+    node first_operand = program_queue.front();
+    program_queue.pop();
+    node second_operand = program_queue.front();
+    program_queue.pop();
+
+    if (first_operand.containsInt() && second_operand.containsInt()) {
+        // Check for division by zero
+        if (second_operand.getInt() == 0) {
+            error_handler.divideByZeroError(i);
+        }
+
+        // Both operands are integers, perform integer modulus
+        int result = first_operand.getInt() % second_operand.getInt();
+        program_queue.push(node(result));
+    } else {
+        // Error: MOD operation is only defined for integer operands
+        error_handler.operationMismatchError(i);
     }
 }
