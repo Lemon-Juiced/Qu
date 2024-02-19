@@ -10,6 +10,7 @@
 #include <vector>
 #include "error\errorHandler.h"
 #include "node\node.h"
+#include "operation\operationHandler.h"
 
 using namespace std;
 
@@ -22,11 +23,6 @@ map<string, int> saved_positions; // Map that stores the positions the programme
 bool fileArgChecker(int argc);
 int run(vector<string> program_text);
 bool isInteger(string str);
-void quAdd(int i);
-void quDiv(int i);
-void quMod(int i);
-void quMul(int i);
-void quSub(int i);
 
 /**
  * This is the main entryway into the interpreter.
@@ -116,12 +112,12 @@ int run(vector<string> program_text){
 
         // ADD
         if (current_line.find("ADD") != string::npos) {
-            quAdd(i);
+            OperationHandler::quAdd(program_queue, i, error_handler);
         }
 
         // DIV
         if(current_line.find("DIV") != string::npos){
-            quDiv(i);
+            OperationHandler::quSub(program_queue, i, error_handler);
         }
 
         // EMPTY 
@@ -131,12 +127,12 @@ int run(vector<string> program_text){
 
         // MOD
         if(current_line.find("MOD") != string::npos){
-            quMod(i);
+            OperationHandler::quMod(program_queue, i, error_handler);
         }
 
         // MUL
         if(current_line.find("MUL") != string::npos){
-            quMul(i);
+            OperationHandler::quMul(program_queue, i, error_handler);
         }
 
         // PEEK & PEEKLN
@@ -233,7 +229,7 @@ int run(vector<string> program_text){
 
         // SUB
         if(current_line.find("SUB") != string::npos){
-            quSub(i);
+            OperationHandler::quSub(program_queue, i, error_handler);
         }
 
         // SORTUP
@@ -308,146 +304,5 @@ bool isInteger(string str){
         return true;
     } catch (...) {
         return false;
-    }
-}
-
-/**
- * The custom ADD function for the queue
- * 
- * @param i The current line index in the program.
- */
-void quAdd(int i) {
-    if (program_queue.size() < 2) {
-        // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(i);
-    }
-
-    node first_operand = program_queue.front();
-    program_queue.pop();
-    node second_operand = program_queue.front();
-    program_queue.pop();
-
-    if (first_operand.containsInt() && second_operand.containsInt()) {
-        // Both operands are integers, perform integer addition
-        int result = first_operand.getInt() + second_operand.getInt();
-        program_queue.push(node(result));
-    } else {
-        // At least one operand is not an integer, concatenate string representations
-        string result_str = first_operand.getString() + second_operand.getString();
-        program_queue.push(node(result_str));
-    }
-}
-
-/**
- * The custom SUB function for the queue
- * 
- * @param i The current line index in the program.
- */
-void quSub(int i) {
-    if (program_queue.size() < 2) {
-        // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(i);
-    }
-
-    node first_operand = program_queue.front();
-    program_queue.pop();
-    node second_operand = program_queue.front();
-    program_queue.pop();
-
-    if (first_operand.containsInt() && second_operand.containsInt()) {
-        // Both operands are integers, perform integer subtraction
-        int result = first_operand.getInt() - second_operand.getInt();
-        program_queue.push(node(result));
-    } else {
-        // Error: SUB operation is only defined for integer operands
-        error_handler.operationMismatchError(i);
-    }
-}
-
-/**
- * The custom MUL function for the queue
- * 
- * @param i The current line index in the program.
- */
-void quMul(int i) {
-    if (program_queue.size() < 2) {
-        // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(i);
-    }
-
-    node first_operand = program_queue.front();
-    program_queue.pop();
-    node second_operand = program_queue.front();
-    program_queue.pop();
-
-    if (first_operand.containsInt() && second_operand.containsInt()) {
-        // Both operands are integers, perform integer multiplication
-        int result = first_operand.getInt() * second_operand.getInt();
-        program_queue.push(node(result));
-    } else {
-        // Error: MUL operation is only defined for integer operands
-        error_handler.operationMismatchError(i);
-    }
-}
-
-/**
- * The custom DIV function for the queue
- * 
- * @param i The current line index in the program.
- */
-void quDiv(int i) {
-    if (program_queue.size() < 2) {
-        // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(i);
-    }
-
-    node first_operand = program_queue.front();
-    program_queue.pop();
-    node second_operand = program_queue.front();
-    program_queue.pop();
-
-    if (first_operand.containsInt() && second_operand.containsInt()) {
-        // Check for division by zero
-        if (second_operand.getInt() == 0) {
-            error_handler.divideByZeroError(i);
-        }
-
-        // Both operands are integers, perform integer division
-        int result = first_operand.getInt() / second_operand.getInt();
-        program_queue.push(node(result));
-    } else {
-        // Error: DIV operation is only defined for integer operands
-        error_handler.operationMismatchError(i);
-    }
-}
-
-/**
- * The custom MOD function for the queue
- * 
- * @param i The current line index in the program.
- */
-void quMod(int i) {
-    if (program_queue.size() < 2) {
-        // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(i);
-    }
-
-    node first_operand = program_queue.front();
-    program_queue.pop();
-    node second_operand = program_queue.front();
-    program_queue.pop();
-
-    if (first_operand.containsInt() && second_operand.containsInt()) {
-        // Check for division by zero
-        if (second_operand.getInt() == 0) {
-            error_handler.divideByZeroError(i);
-        }
-
-        // Both operands are integers, perform integer modulus
-        int result = first_operand.getInt() % second_operand.getInt();
-        program_queue.push(node(result));
-    } else {
-        // Error: MOD operation is only defined for integer operands
-        error_handler.operationMismatchError(i);
     }
 }

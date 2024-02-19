@@ -32,5 +32,5 @@ GOTO |{specified_location}|
 RET
 
 cd .\dev\lemonjuice\qu\
-g++ .\qu.cpp -o qu .\error\errorHandler.cpp .\node\node.cpp
+g++ .\qu.cpp -o qu .\error\errorHandler.cpp .\node\node.cpp .\operation\operationHandler.cpp
 .\qu.exe 

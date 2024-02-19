@@ -3,16 +3,14 @@
 
 using namespace std;
 
-// Globals
-errorHandler error_handler; // error_handler to handle errors.
-
 /**
  * The custom ADD function for the queue
  * 
  * @param program_queue The queue for the program itself.
  * @param line_number The current line index in the program.
+ * @param error_handler The interpreter's error handler.
  */
-void OperationHandler::quAdd(std::queue<node>& program_queue, int line_number) {
+void OperationHandler::quAdd(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
         error_handler.notEnoughArgumentsError(line_number);
@@ -39,8 +37,9 @@ void OperationHandler::quAdd(std::queue<node>& program_queue, int line_number) {
  * 
  * @param program_queue The queue for the program itself.
  * @param line_number The current line index in the program.
+ * @param error_handler The interpreter's error handler.
  */
-void OperationHandler::quSub(std::queue<node>& program_queue, int line_number) {
+void OperationHandler::quSub(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
         error_handler.notEnoughArgumentsError(line_number);
@@ -66,8 +65,9 @@ void OperationHandler::quSub(std::queue<node>& program_queue, int line_number) {
  * 
  * @param program_queue The queue for the program itself.
  * @param line_number The current line index in the program.
+ * @param error_handler The interpreter's error handler.
  */
-void OperationHandler::quMul(std::queue<node>& program_queue, int line_number) {
+void OperationHandler::quMul(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
         error_handler.notEnoughArgumentsError(line_number);
@@ -93,8 +93,9 @@ void OperationHandler::quMul(std::queue<node>& program_queue, int line_number) {
  * 
  * @param program_queue The queue for the program itself.
  * @param line_number The current line index in the program.
+ * @param error_handler The interpreter's error handler.
  */
-void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number) {
+void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
         error_handler.notEnoughArgumentsError(line_number);
@@ -125,8 +126,9 @@ void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number) {
  * 
  * @param program_queue The queue for the program itself.
  * @param line_number The current line index in the program.
+ * @param error_handler The interpreter's error handler.
  */
-void OperationHandler::quMod(std::queue<node>& program_queue, int line_number) {
+void OperationHandler::quMod(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
         error_handler.notEnoughArgumentsError(line_number);
