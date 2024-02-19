@@ -107,18 +107,26 @@ int run(vector<string> program_text){
         }
 
         // ADD
-        if(current_line.find("ADD") != string::npos){
+        if (current_line.find("ADD") != string::npos) {
             node old_front = program_queue.front();
             program_queue.pop();
 
             node new_front = program_queue.front();
-            if(new_front.containsInt()){
-                if(old_front.containsInt()) new_front.setInt(old_front.getInt() + new_front.getInt()); // int + int == int
-                else error_handler.operationMismatchError(i); // int + string != int 
+            if (new_front.containsInt()) {
+                if (old_front.containsInt()) new_front.setInt(old_front.getInt() + new_front.getInt()); // int + int == int
+                else {
+                    // Create a new node containing the concatenation of old_front's string and new_front's string
+                    string concatenated_string = old_front.getString() + new_front.getString();
+                    new_front.setString(concatenated_string);
+                }
             } else {
-                if(old_front.containsString()) new_front.setString(old_front.getString() + new_front.getString()); // string + string == string
-                else new_front.setString(old_front.getIntAsString() + new_front.getString()); // string + int == string
+                // Create a new node containing the concatenation of old_front's string representation of int and new_front's string
+                string concatenated_string = old_front.getIntAsString() + new_front.getString();
+                new_front.setString(concatenated_string);
             }
+
+            // Push the new_front node back into the queue
+            program_queue.push(new_front);
         }
 
         // EMPTY 
@@ -159,32 +167,24 @@ int run(vector<string> program_text){
             }
         }
 
-        // POPALL
-        if (current_line.find("POPALL") != string::npos) {
+        // POP, POPLN, POPALL & POPALLLN
+        if (current_line.find("POP") != string::npos) {
+            bool pop_all = current_line.find("ALL") != string::npos; // Check if "ALL" is present
             bool print_newline = current_line.find("LN") != string::npos; // Check if "LN" is present
-            while (!program_queue.empty()) {
-                node current_node = program_queue.front();
-                program_queue.pop();
-        
-                if (print_newline) {
-                    current_node.pop_println(); // Print each popped element on a new line
-                } else {
-                    current_node.pop_print(); // Print each popped element
+    
+            if (pop_all) {
+                while (!program_queue.empty()) {
+                    node current_node = program_queue.front();
+                    program_queue.pop();
+                    if (print_newline) current_node.pop_println(); // Print each popped element on a new line
+                    else current_node.pop_print(); // Print each popped element
                 }
+            } else {
+                node current_node = program_queue.front();
+                if (print_newline) current_node.pop_println(); // POPLN
+                else current_node.pop_print(); // POP
+                program_queue.pop(); // This has to be done separately because ".pop()" doesn't return anything... why? Because who could ever want to see what the first element in a FIFO data structure was.
             }
-        }
-
-        // POP & POPLN
-        if(current_line.find("POP") != string::npos){
-            node current_node = program_queue.front();
-            
-            if(current_line.find("LN") != string::npos) {
-                if(current_line.find("POPLN") != string::npos) current_node.pop_println(); // POPLN
-                else error_handler.unknownInstruction(i);
-            } 
-            else current_node.pop_print(); // POP
-
-            program_queue.pop(); // This has to be done separately because ".pop()" doesn't return anything... why? Because who could ever want to see what the first element in a FIFO data structure was.
         }
 
         // PUSH
@@ -206,12 +206,24 @@ int run(vector<string> program_text){
                 string second_half = current_line.substr(current_line.find("PUSH") + 5); // +5 to skip "PUSH "
                 if (isInteger(second_half)) {
                     int push_int = stoi(second_half);
+                    cout << "Pushing integer: " << push_int << endl; // Debugging output
                     node new_node = node(push_int);
                     program_queue.push(new_node);
                 } else {
                     error_handler.invalidPushError(i);
                 }
             }
+        }
+
+        // QDISPLAY
+        if (current_line.find("QDISPLAY") != string::npos) {queue<node> temp_queue = program_queue; // Create a copy of the original queue
+            while (!temp_queue.empty()) {
+                node current_node = temp_queue.front();
+                temp_queue.pop();
+                current_node.pop_print(); // Print each popped element
+                if (!temp_queue.empty()) cout << ", "; // Print comma to separate elements if there are more elements in the queue
+            }
+            cout << endl;
         }
 
         // SUB
