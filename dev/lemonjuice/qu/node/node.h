@@ -19,8 +19,6 @@ public:
     std::string getString() const;   
     void setInt(int);
     void setString(std::string);
-    void peek_print() const;         
-    void peek_println() const;       
-    void pop_print() const;          
-    void pop_println() const;        
+    void p_print() const;         
+    void p_println() const;      
 };

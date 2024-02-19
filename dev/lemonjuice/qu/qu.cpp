@@ -141,10 +141,10 @@ int run(vector<string> program_text){
             node current_node = program_queue.front();
 
             if(current_line.find("LN") != string::npos) {
-                if(current_line.find("PEEKLN") != string::npos) current_node.peek_println(); // PEEKLN
+                if(current_line.find("PEEKLN") != string::npos) current_node.p_println(); // PEEKLN
                 else error_handler.unknownInstruction(i);
             }
-            else current_node.peek_print(); // PEEK
+            else current_node.p_print(); // PEEK
         }
 
         // POKE
@@ -178,13 +178,13 @@ int run(vector<string> program_text){
                 while (!program_queue.empty()) {
                     node current_node = program_queue.front();
                     program_queue.pop();
-                    if (print_newline) current_node.pop_println(); // Print each popped element on a new line
-                    else current_node.pop_print(); // Print each popped element
+                    if (print_newline) current_node.p_println(); // Print each popped element on a new line
+                    else current_node.p_print(); // Print each popped element
                 }
             } else {
                 node current_node = program_queue.front();
-                if (print_newline) current_node.pop_println(); // POPLN
-                else current_node.pop_print(); // POP
+                if (print_newline) current_node.p_println(); // POPLN
+                else current_node.p_print(); // POP
                 program_queue.pop(); // This has to be done separately because ".pop()" doesn't return anything... why? Because who could ever want to see what the first element in a FIFO data structure was.
             }
         }
@@ -251,7 +251,7 @@ int run(vector<string> program_text){
             while (!temp_queue.empty()) {
                 node current_node = temp_queue.front();
                 temp_queue.pop();
-                current_node.pop_print(); // Print each popped element
+                current_node.p_print(); // Print each popped element
                 if (!temp_queue.empty()) cout << ", "; // Print comma to separate elements if there are more elements in the queue
             }
             cout << endl;
@@ -287,6 +287,25 @@ int run(vector<string> program_text){
             }
 
             program_queue.push(node(input));
+        }
+
+        // RET
+        if (current_line.find("RET") != std::string::npos) {
+            // Check if the queue is empty
+            if (program_queue.empty()) {
+                error_handler.retEmptyQueueError(i);
+                return -1; // End the program with an error code
+            } else {
+                // Get the front of the queue
+                node front_node = program_queue.front();
+                program_queue.pop();
+                // Return the value of the front of the queue
+                if (front_node.containsInt()) {
+                    return front_node.getInt();
+                } else {
+                    error_handler.nonIntegerReturnValueError(i);
+                }
+            }
         }
 
         // SUB

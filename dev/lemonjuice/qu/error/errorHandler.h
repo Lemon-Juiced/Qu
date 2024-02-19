@@ -3,6 +3,7 @@
 
 class errorHandler{
 private:
+    void printError(const std::string& message);
 public:
     errorHandler();
 
@@ -16,6 +17,8 @@ public:
     void fileInvalidExtensionError(std::string);
     void fileMissingError(int);
 
+    void nonIntegerReturnValueError(int);
+
     void notEnoughArgumentsError(int);
 
     void operationMismatchError(int);
@@ -23,6 +26,8 @@ public:
     void printError(int);
 
     void readError(int);
+
+    void retEmptyQueueError(int); 
 
     void singleBarError(int, int);
     void singleQuoteError(int, int);

@@ -6,7 +6,20 @@
 
 using namespace std;
 
+// ANSI Escape Codes
+const std::string RED_COLOR = "\033[1;31m";
+const std::string RESET_COLOR = "\033[0m";
+
 errorHandler::errorHandler(){}
+
+/**
+ * Helper function to print error messages with red color
+ * 
+ * @param error_message The error message included.
+ */
+void errorHandler::printError(const string& error_message) {
+    cerr << RED_COLOR << "Error: " << error_message << RESET_COLOR << endl;
+}
 
 /**
  * Handles errors when an error occurs when a division by zero happens.
@@ -14,7 +27,7 @@ errorHandler::errorHandler(){}
  * @param line The line of the error.
  */
 void errorHandler::divideByZeroError(int line){
-    cout << "Error: Division by zero at line: " << line << "." << endl;
+    printError("Division by zero at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -33,7 +46,7 @@ void errorHandler::exitProgram(int exitCode){
  * @param line The line of the error.
  */
 void errorHandler::invalidPushError(int line){
-    cout << "Error: Invalid PUSH on: " << line << "." << endl;
+    printError("Invalid PUSH on line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -44,12 +57,14 @@ void errorHandler::invalidPushError(int line){
  * @param expected_args The expected number of args that should have been specified.
  */
 void errorHandler::fileExtraError(int max_arg, int expected_args){
-    cout << "Error: Extra file argument at index (indices): ";
-    for (size_t i = expected_args; i <= max_arg; i++){
-        cout << max_arg;
-        if(i+1 != max_arg) cout << ", ";
-        cout << "." << endl;
+    cerr << RED_COLOR << "Error: Extra file argument(s) at index (indices): ";
+    for (size_t i = expected_args; i <= max_arg; i++) {
+        cerr << i;
+        if (i + 1 <= max_arg) {
+            cerr << ", ";
+        }
     }
+    cerr << "." << RESET_COLOR << endl;
     exitProgram(-1);
 }
 
@@ -59,8 +74,7 @@ void errorHandler::fileExtraError(int max_arg, int expected_args){
  * @param file_name The file's name.
  */
 void errorHandler::fileInvalidExtensionError(std::string file_name){
-    cout << "Error: The file: " << file_name << " is invalid." << endl;
-    cout << "File name must end in \".qu\"." << endl;
+    printError("The file: " + file_name + " is invalid.\nFile name must end in \".qu\".");
     exitProgram(-1);
 }
 
@@ -70,7 +84,17 @@ void errorHandler::fileInvalidExtensionError(std::string file_name){
  * @param arg The index of the missing arg.
  */
 void errorHandler::fileMissingError(int arg){
-    cout << "Error: Missing file argument at index: " << arg << "." << endl;
+    printError("Missing file argument at index: " + to_string(arg));
+    exitProgram(-1);
+}
+
+/**
+ * Handles errors when a RET instruction tries to pass a value other than an integer to the return value.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::nonIntegerReturnValueError(int line){
+    printError("Tried to return value other than an integer at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -80,7 +104,17 @@ void errorHandler::fileMissingError(int arg){
  * @param line The line of the error.
  */
 void errorHandler::notEnoughArgumentsError(int line){
-    cout << "Error: Missing arguments at line : " << line << "." << endl;
+    printError("Missing arguments at line: " + to_string(line));
+    exitProgram(-1);
+}
+
+/**
+ * Handles errors when a RET instruction tries to return from an empty queue.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::retEmptyQueueError(int line){
+    printError("Tried to return value from an empty queue at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -90,7 +124,7 @@ void errorHandler::notEnoughArgumentsError(int line){
  * @param line The line of the error.
  */
 void errorHandler::operationMismatchError(int line){
-    cout << "Error: Mismatched int and string operaton on : " << line << "." << endl;
+    printError("Mismatched int and string operation on line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -100,7 +134,7 @@ void errorHandler::operationMismatchError(int line){
  * @param line The line of the error.
  */
 void errorHandler::printError(int line){
-    cout << "Error: Something was attempted to be printed via PRINT that cannot be printed on line : " << line << "." << endl;
+    printError("Something was attempted to be printed via PRINT that cannot be printed on line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -110,7 +144,7 @@ void errorHandler::printError(int line){
  * @param line The line of the error.
  */
 void errorHandler::readError(int line){
-    cout << "Error: Something was attempted to be read via READ that cannot be read on line : " << line << "." << endl;
+    printError("Something was attempted to be read via READ that cannot be read on line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -121,7 +155,7 @@ void errorHandler::readError(int line){
  * @param line The line of the error.
  */
 void errorHandler::singleBarError(int index, int line){
-    cout << "Error: Single '|' on line: " << line << " at index: " << index << "." << endl;
+    printError("Single '|' on line: " + to_string(line) + " at index: " + to_string(index));
     exitProgram(-1);
 }
 
@@ -132,7 +166,7 @@ void errorHandler::singleBarError(int index, int line){
  * @param line The line of the error.
  */
 void errorHandler::singleQuoteError(int index, int line){
-    cout << "Error: Single '\"' on line: " << line << " at index: " << index << "." << endl;
+    printError("Single '\"' on line: " + to_string(line) + " at index: " + to_string(index));
     exitProgram(-1);
 }
 
@@ -142,6 +176,6 @@ void errorHandler::singleQuoteError(int index, int line){
  * @param line The line of the error.
  */
 void errorHandler::unknownInstruction(int line){
-    cout << "Error: Unknown instruction on line: " << line << "." << endl;
+    printError("Unknown instruction on line: " + to_string(line));
     exitProgram(-1);
 }

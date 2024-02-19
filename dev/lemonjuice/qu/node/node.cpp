@@ -40,7 +40,7 @@ void node::setString(std::string stringValue) {
     stringVal = stringValue;
 }
 
-void node::peek_print() const {
+void node::p_print() const {
     if (containsInt()) {
         std::cout << getInt();
     } else {
@@ -48,20 +48,7 @@ void node::peek_print() const {
     }
 }
 
-void node::peek_println() const {
-    peek_print();
-    std::cout << std::endl;
-}
-
-void node::pop_print() const {
-    if (containsInt()) {
-        std::cout << getInt();
-    } else {
-        std::cout << getString();
-    }
-}
-
-void node::pop_println() const {
-    pop_print();
+void node::p_println() const {
+    p_print();
     std::cout << std::endl;
 }
