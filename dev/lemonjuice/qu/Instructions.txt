@@ -1,12 +1,13 @@
-PUSH
-POP
-POPLN
+EMPTY
 PEEK
 PEEKLN
-POKE - Randomize Queue Order
-SORTUP
+POKE
+POP
+POPLN 
+PUSH
+READ
 SORTDOWN
-EMPTY
+SORTUP
 
 QDISPLAY
 
@@ -17,7 +18,6 @@ DIV
 MOD
 
 PRINT
-READ
 
 |{specified_location}| - Creates A Specified Location
 

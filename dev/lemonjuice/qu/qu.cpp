@@ -332,6 +332,13 @@ int run(vector<string> program_text){
         if (current_line.find("PRINT") != std::string::npos) {
             std::string arg = current_line.substr(current_line.find("PRINT") + 6); // +6 to skip "PRINT "
 
+            // Replace escape sequences with their corresponding characters
+            for (size_t pos = arg.find('\\'); pos != std::string::npos; pos = arg.find('\\', pos + 1)) {
+                if (arg[pos + 1] == 'n') { // Check for newline escape sequence
+                    arg.replace(pos, 2, "\n"); // Replace "\n" with newline character
+                }
+            }
+
             // Attempt to convert the argument into an integer
             bool is_integer = true;
             try {
@@ -346,14 +353,7 @@ int run(vector<string> program_text){
                 std::cout << arg << std::endl;
             } else {
                 // Argument is not an integer, treat it as a string
-                // Check if the argument is enclosed within double quotes
-                if (arg.front() == '"' && arg.back() == '"') {
-                    arg = arg.substr(1, arg.length() - 2); // Remove the quotes
-                    std::cout << arg << std::endl;
-                } else {
-                    // Argument is not enclosed within double quotes, error
-                    error_handler.printError(i);
-                }
+                std::cout << arg << std::endl;
             }
         }
 
@@ -362,10 +362,18 @@ int run(vector<string> program_text){
             size_t quote_pos1 = current_line.find('\"'); // The first occurrence of '\"'
             size_t quote_pos2 = current_line.rfind('\"'); // The last occurrence of '\"'
 
-            if (quote_pos1 != string::npos && quote_pos2 != string::npos) {
+            if (quote_pos1 != std::string::npos && quote_pos2 != std::string::npos) {
                 // If quotes are found, it's a string
                 if (quote_pos1 != quote_pos2) {
                     string push_string = current_line.substr(quote_pos1 + 1, quote_pos2 - quote_pos1 - 1); // Extract substring between quotes
+
+                    // Replace escape sequences with their corresponding characters
+                    for (size_t pos = push_string.find('\\'); pos != std::string::npos; pos = push_string.find('\\', pos + 1)) {
+                        if (push_string[pos + 1] == 'n') { // Check for newline escape sequence
+                            push_string.replace(pos, 2, "\n"); // Replace "\n" with newline character
+                        }
+                    }
+
                     node new_node = node(push_string);
                     program_queue.push(new_node);
                 } else {
@@ -410,22 +418,21 @@ int run(vector<string> program_text){
                     int value = std::stoi(arg);
                     std::cout << value << " "; // Print a space after the integer
                 } catch (std::invalid_argument&) {
-                    // Conversion failed, argument is neither a string nor an integer
-                    error_handler.readError(i);
-                    continue;
+                    // If conversion fails, treat it as a string
+                    std::cout << arg;
                 }
             }
 
             // Get input from user
-            int input;
-            std::cin >> input;
-
-            if (std::cin.fail()) {
-                // Input is not an integer, print error message and exit
-                error_handler.readError(i);
+            if (arg.empty() || arg.front() != '"' || arg.back() != '"') {
+                std::string input;
+                std::getline(std::cin, input); // Read entire line including whitespaces
+                program_queue.push(node(input));
+            } else {
+                int input;
+                std::cin >> input;
+                program_queue.push(node(input));
             }
-
-            program_queue.push(node(input));
         }
 
         // RET

@@ -1,9 +1,6 @@
-PUSH "Hello World - 1"
-PUSH "Hello World - 2"
-PUSH "Hello World - 3"
-POKE
-QDISPLAY
-SORTUP
-QDISPLAY
-SORTDOWN
-QDISPLAY
+PUSH "Hello World "
+READ "What's your name: "
+ADD
+PUSH ".\nI feel that we will be really good friends!"
+ADD
+POPLN
