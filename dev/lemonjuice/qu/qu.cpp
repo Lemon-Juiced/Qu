@@ -4,6 +4,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <queue>
 #include <sstream>
@@ -24,6 +25,7 @@ map<string, int> saved_positions; // Map that stores the positions the programme
 bool fileArgChecker(int argc);
 int run(vector<string> program_text);
 bool isInteger(string str);
+bool compareFirstTwo(const std::queue<node>& program_queue, string comparisonType, int line);
 
 /**
  * This is the main entryway into the interpreter.
@@ -124,6 +126,143 @@ int run(vector<string> program_text){
         // EMPTY 
         if (current_line.find("EMPTY") != string::npos) {
             (void) program_queue.empty(); // Ignoring the return value intentionally
+        }
+
+        // GOTO 
+        if (current_line.find("GOTO") != std::string::npos) {
+            // Extract the argument of the GOTO instruction
+            std::string arg = current_line.substr(current_line.find("GOTO") + 5); // +5 to skip "GOTO "
+
+            // Check if the argument is a line number or a saved position
+            int line_number;
+            if (isInteger(arg)) {
+                // Argument is a line number
+                line_number = std::stoi(arg);
+            } else {
+                // Argument is a saved position
+                if (saved_positions.find(arg) != saved_positions.end()) {
+                    // Jump to the saved position
+                    i = saved_positions[arg];
+                    continue; // Skip the rest of the loop to avoid processing the new line again
+                } else {
+                    // Error: Invalid saved position
+                    error_handler.goToInvalidLineError(i);
+                }
+            }
+
+            // Check if the line number is valid
+            if (line_number >= 0 && line_number < program_text.size()) {
+                // Jump to the specified line
+                i = line_number;
+                continue; // Skip the rest of the loop to avoid processing the new line again
+            } else {
+                // Error: Invalid line number
+                error_handler.goToInvalidLineError(i);
+            }
+        }   
+
+        // IFEQ
+        if (current_line.find("IFEQ") != std::string::npos) {
+            // Extract the argument of the IFGT instruction
+            std::string arg = current_line.substr(current_line.find("IFEQ") + 5); // +5 to skip "IFGT "
+
+            // Parse the argument to extract the line number or saved position
+            int jump_line;
+            if (isInteger(arg)) {
+                jump_line = std::stoi(arg);
+            } else {
+                if (saved_positions.find(arg) != saved_positions.end()) {
+                    jump_line = saved_positions[arg];
+                } else {
+                    error_handler.unknownInstruction(i);
+                    continue;
+                }
+            }
+
+            // Check if the condition is met using compareFirstTwo function
+            if (compareFirstTwo(program_queue, "==", i)) {
+                // Jump to the specified line
+                i = jump_line;
+                continue;
+            }
+        }
+
+        // IFGT
+        if (current_line.find("IFGT") != std::string::npos) {
+            // Extract the argument of the IFGT instruction
+            std::string arg = current_line.substr(current_line.find("IFGT") + 5); // +5 to skip "IFGT "
+
+            // Parse the argument to extract the line number or saved position
+            int jump_line;
+            if (isInteger(arg)) {
+                jump_line = std::stoi(arg);
+            } else {
+                if (saved_positions.find(arg) != saved_positions.end()) {
+                    jump_line = saved_positions[arg];
+                } else {
+                    error_handler.unknownInstruction(i);
+                    continue;
+                }
+            }
+
+            // Check if the condition is met using compareFirstTwo function
+            if (compareFirstTwo(program_queue, ">", i)) {
+                // Jump to the specified line
+                i = jump_line;
+                continue;
+            }
+        }
+
+        // IFLT
+        if (current_line.find("IFLT") != std::string::npos) {
+            // Extract the argument of the IFGT instruction
+            std::string arg = current_line.substr(current_line.find("IFLT") + 5); // +5 to skip "IFGT "
+
+            // Parse the argument to extract the line number or saved position
+            int jump_line;
+            if (isInteger(arg)) {
+                jump_line = std::stoi(arg);
+            } else {
+                if (saved_positions.find(arg) != saved_positions.end()) {
+                    jump_line = saved_positions[arg];
+                } else {
+                    error_handler.unknownInstruction(i);
+                    continue;
+                }
+            }
+
+            // Check if the condition is met using compareFirstTwo function
+            if (compareFirstTwo(program_queue, "<", i)) {
+                // Jump to the specified line
+                i = jump_line;
+                continue;
+            }
+        }
+
+        // IFNQ
+        if (current_line.find("IFNQ") != std::string::npos) {
+            // Extract the argument of the IFGT instruction
+            std::string arg = current_line.substr(current_line.find("IFNQ") + 5); // +5 to skip "IFGT "
+
+            // Parse the argument to extract the line number or saved position
+            int jump_line;
+            if (isInteger(arg)) {
+                jump_line = std::stoi(arg);
+            } else {
+                if (saved_positions.find(arg) != saved_positions.end()) {
+                    jump_line = saved_positions[arg];
+                } else {
+                    error_handler.unknownInstruction(i);
+                    continue;
+                }
+            }
+
+            // Check if the condition is met using compareFirstTwo function
+            if (compareFirstTwo(program_queue, "!=", i)) {
+                // Jump to the specified line
+                i = jump_line;
+                continue;
+            }
         }
 
         // MOD
@@ -386,4 +525,50 @@ bool isInteger(string str){
     } catch (...) {
         return false;
     }
+}
+
+/**
+ * Compares the first two elements of a queue
+ * 
+ * @param program_queue The queue of the program itself
+ * @param comparisonType The type of comparison to check for
+ * @param line The line the comparsion happens at, for error handling.
+ * @return the result of the comparison
+ */
+bool compareFirstTwo(const std::queue<node>& program_queue, string comparisonType, int line) {
+    // Make a copy of the queue
+    std::queue<node> temp_queue = program_queue;
+
+    // Check if there are at least two elements in the queue
+    if (temp_queue.size() < 2) {
+        error_handler.notEnoughArgumentsError(line);
+    }
+
+    // Access the first element
+    node first_element = temp_queue.front();
+
+    // Dequeue the first element
+    temp_queue.pop();
+
+    // Access the second element
+    node second_element = temp_queue.front();
+
+    // Check the comparison type and compare
+    if(comparisonType == ">"){
+        if(first_element.getInt() > second_element.getInt()) return true;
+        else return false;
+    } else if(comparisonType == "<"){
+        if(first_element.getInt() < second_element.getInt()) return true;
+        else return false;
+    } else if(comparisonType == "=="){
+        if(first_element.getInt() == second_element.getInt()) return true;
+        else return false;
+    } else if(comparisonType == "!="){
+        if(first_element.getInt() != second_element.getInt()) return true;
+        else return false;
+    } else {
+        error_handler.unspecifiedComparisonOperationError(line);
+    }
+
+    return false; // Something went wrong with the comparison
 }

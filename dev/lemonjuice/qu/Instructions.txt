@@ -21,10 +21,14 @@ READ
 
 |{specified_location}| - Creates A Specified Location
 
-IF_GT:
-IF_LT:
-IF_EQ:
-IF_NQ:
+IFGT {line_number}
+IFGT |{specified_location}|
+IFLT {line_number}
+IFLT |{specified_location}|
+IFEQ {line_number}
+IFEQ |{specified_location}|
+IFNQ {line_number}
+IFNQ |{specified_location}|
 
 GOTO {line_number}
 GOTO |{specified_location}|

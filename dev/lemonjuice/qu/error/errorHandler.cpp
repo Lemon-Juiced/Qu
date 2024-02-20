@@ -89,6 +89,16 @@ void errorHandler::fileMissingError(int arg){
 }
 
 /**
+ * Handles errors when a GOTO instruction sends the program to an unexpected area.
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::goToInvalidLineError(int line){
+    printError("GOTO tried to send program to unexpected area at line: " + to_string(line));
+    exitProgram(-1);
+}
+
+/**
  * Handles errors when a RET instruction tries to pass a value other than an integer to the return value.
  * 
  * @param line The line of the error.
@@ -105,6 +115,16 @@ void errorHandler::nonIntegerReturnValueError(int line){
  */
 void errorHandler::notEnoughArgumentsError(int line){
     printError("Missing arguments at line: " + to_string(line));
+    exitProgram(-1);
+}
+
+/**
+ * Handles errors when there an unspecified comparsion operation is used
+ * 
+ * @param line The line of the error.
+ */
+void errorHandler::unspecifiedComparisonOperationError(int line){
+    printError("An unspecified comparsion operation was used at line: " + to_string(line));
     exitProgram(-1);
 }
 

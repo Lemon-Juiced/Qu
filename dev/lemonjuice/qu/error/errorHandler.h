@@ -17,11 +17,15 @@ public:
     void fileInvalidExtensionError(std::string);
     void fileMissingError(int);
 
+    void goToInvalidLineError(int);
+
     void nonIntegerReturnValueError(int);
 
     void notEnoughArgumentsError(int);
 
     void operationMismatchError(int);
+
+    void unspecifiedComparisonOperationError(int);
 
     void printError(int);
 
