@@ -118,9 +118,19 @@ int run(vector<string> program_text){
             OperationHandler::quAdd(program_queue, i, error_handler);
         }
 
+        // ADDK
+        if (current_line.find("ADDK") != string::npos) {
+            OperationHandler::quAddK(program_queue, i, error_handler);
+        }
+
         // DIV
         if(current_line.find("DIV") != string::npos){
             OperationHandler::quSub(program_queue, i, error_handler);
+        }
+
+        // DIVK
+        if(current_line.find("DIVK") != string::npos){
+            OperationHandler::quSubK(program_queue, i, error_handler);
         }
 
         // EMPTY 
@@ -129,9 +139,10 @@ int run(vector<string> program_text){
         }
 
         // GOTO 
-        if (current_line.find("GOTO") != std::string::npos) {
+        size_t goto_pos = current_line.find("GOTO");
+        if (goto_pos != std::string::npos && (goto_pos == 0 || current_line[goto_pos - 1] == ' ')) {
             // Extract the argument of the GOTO instruction
-            std::string arg = current_line.substr(current_line.find("GOTO") + 5); // +5 to skip "GOTO "
+            std::string arg = current_line.substr(goto_pos + 5); // +5 to skip "GOTO "
 
             // Check if the argument is a line number or a saved position
             int line_number;
@@ -162,9 +173,10 @@ int run(vector<string> program_text){
         }   
 
         // IFEQ
-        if (current_line.find("IFEQ") != std::string::npos) {
-            // Extract the argument of the IFGT instruction
-            std::string arg = current_line.substr(current_line.find("IFEQ") + 5); // +5 to skip "IFGT "
+        size_t ifeq_pos = current_line.find("IFEQ");
+        if (ifeq_pos != std::string::npos && (ifeq_pos == 0 || current_line[ifeq_pos - 1] == ' ')) {
+            // Extract the argument of the IFEQ instruction
+            std::string arg = current_line.substr(ifeq_pos + 5); // +5 to skip "IFEQ "
 
             // Parse the argument to extract the line number or saved position
             int jump_line;
@@ -188,9 +200,9 @@ int run(vector<string> program_text){
         }
 
         // IFGT
-        if (current_line.find("IFGT") != std::string::npos) {
-            // Extract the argument of the IFGT instruction
-            std::string arg = current_line.substr(current_line.find("IFGT") + 5); // +5 to skip "IFGT "
+        size_t ifgt_pos = current_line.find("IFGT");
+        if (ifgt_pos != std::string::npos && (ifgt_pos == 0 || current_line[ifgt_pos - 1] == ' ')) {
+            std::string arg = current_line.substr(ifgt_pos + 5); // +5 to skip "IFGT "
 
             // Parse the argument to extract the line number or saved position
             int jump_line;
@@ -214,9 +226,9 @@ int run(vector<string> program_text){
         }
 
         // IFLT
-        if (current_line.find("IFLT") != std::string::npos) {
-            // Extract the argument of the IFGT instruction
-            std::string arg = current_line.substr(current_line.find("IFLT") + 5); // +5 to skip "IFGT "
+        size_t iflt_pos = current_line.find("IFLT");
+        if (iflt_pos != std::string::npos && (iflt_pos == 0 || current_line[iflt_pos - 1] == ' ')) {
+            std::string arg = current_line.substr(iflt_pos + 5); // +5 to skip "IFLT "
 
             // Parse the argument to extract the line number or saved position
             int jump_line;
@@ -240,9 +252,9 @@ int run(vector<string> program_text){
         }
 
         // IFNQ
-        if (current_line.find("IFNQ") != std::string::npos) {
-            // Extract the argument of the IFGT instruction
-            std::string arg = current_line.substr(current_line.find("IFNQ") + 5); // +5 to skip "IFGT "
+        size_t ifnq_pos = current_line.find("IFNQ");
+        if (ifnq_pos != std::string::npos && (ifnq_pos == 0 || current_line[ifnq_pos - 1] == ' ')) {
+            std::string arg = current_line.substr(ifnq_pos + 5); // +5 to skip "IFNQ "
 
             // Parse the argument to extract the line number or saved position
             int jump_line;
@@ -270,9 +282,19 @@ int run(vector<string> program_text){
             OperationHandler::quMod(program_queue, i, error_handler);
         }
 
+        // MODK
+        if(current_line.find("MODK") != string::npos){
+            OperationHandler::quModK(program_queue, i, error_handler);
+        }
+
         // MUL
         if(current_line.find("MUL") != string::npos){
             OperationHandler::quMul(program_queue, i, error_handler);
+        }
+
+        // MULK
+        if(current_line.find("MULK") != string::npos){
+            OperationHandler::quMulK(program_queue, i, error_handler);
         }
 
         // PEEK & PEEKLN
@@ -329,32 +351,18 @@ int run(vector<string> program_text){
         }
 
         // PRINT
-        if (current_line.find("PRINT") != std::string::npos) {
-            std::string arg = current_line.substr(current_line.find("PRINT") + 6); // +6 to skip "PRINT "
+        size_t print_pos = current_line.find("PRINT");
+        if (print_pos != std::string::npos && (print_pos == 0 || current_line[print_pos - 1] == ' ')) {
+            // Extract the argument of the PRINT instruction
+            std::string arg = current_line.substr(print_pos + 6); // +6 to skip "PRINT "
 
-            // Replace escape sequences with their corresponding characters
-            for (size_t pos = arg.find('\\'); pos != std::string::npos; pos = arg.find('\\', pos + 1)) {
-                if (arg[pos + 1] == 'n') { // Check for newline escape sequence
-                    arg.replace(pos, 2, "\n"); // Replace "\n" with newline character
-                }
+            // Remove leading and trailing double quotes if they exist
+            if (!arg.empty() && arg.front() == '"' && arg.back() == '"') {
+                arg = arg.substr(1, arg.length() - 2);
             }
 
-            // Attempt to convert the argument into an integer
-            bool is_integer = true;
-            try {
-                int value = std::stoi(arg);
-            } catch (std::invalid_argument&) {
-                // Conversion failed, argument is not an integer
-                is_integer = false;
-            }
-
-            if (is_integer) {
-                // Argument is an integer, print it
-                std::cout << arg << std::endl;
-            } else {
-                // Argument is not an integer, treat it as a string
-                std::cout << arg << std::endl;
-            }
+            // Print the argument
+            std::cout << arg << std::endl;
         }
 
         // PUSH
@@ -405,33 +413,33 @@ int run(vector<string> program_text){
         }
 
         // READ
-        if (current_line.find("READ") != std::string::npos) {
-            std::string arg = current_line.substr(current_line.find("READ") + 5); // +5 to skip "READ "
+        size_t read_pos = current_line.find("READ");
+        if (read_pos != std::string::npos && (read_pos == 0 || current_line[read_pos - 1] == ' ')) {
+            // Extract the argument of the READ instruction
+            std::string arg = current_line.substr(read_pos + 5); // +5 to skip "READ "
 
             // Remove leading and trailing double quotes if they exist
             if (!arg.empty() && arg.front() == '"' && arg.back() == '"') {
                 arg = arg.substr(1, arg.length() - 2);
-                std::cout << arg;
-            } else {
-                // Check if the argument is an integer
-                try {
-                    int value = std::stoi(arg);
-                    std::cout << value << " "; // Print a space after the integer
-                } catch (std::invalid_argument&) {
-                    // If conversion fails, treat it as a string
-                    std::cout << arg;
-                }
             }
 
-            // Get input from user
-            if (arg.empty() || arg.front() != '"' || arg.back() != '"') {
-                std::string input;
-                std::getline(std::cin, input); // Read entire line including whitespaces
-                program_queue.push(node(input));
-            } else {
-                int input;
-                std::cin >> input;
-                program_queue.push(node(input));
+            // Print the argument
+            std::cout << arg;
+
+            // Read a line from the user
+            std::string line;
+            std::getline(std::cin, line);
+
+            // Attempt to convert the line into an integer
+            bool is_integer = true;
+            try {
+                int value = std::stoi(line);
+                // If successful, push the integer to the queue
+                program_queue.push(node(value));
+            } catch (std::invalid_argument&) {
+                // If conversion fails, push the line as a string to the queue
+                is_integer = false;
+                program_queue.push(node(line));
             }
         }
 
@@ -457,6 +465,11 @@ int run(vector<string> program_text){
         // SUB
         if(current_line.find("SUB") != string::npos){
             OperationHandler::quSub(program_queue, i, error_handler);
+        }
+
+        // SUBK
+        if(current_line.find("SUBK") != string::npos){
+            OperationHandler::quSubK(program_queue, i, error_handler);
         }
 
         // SORTUP
