@@ -20,5 +20,8 @@ public:
     void setInt(int);
     void setString(std::string);
     void p_print() const;         
-    void p_println() const;      
+    void p_println() const; 
+
+    std::string createNodeDisplay() const;
+    void printNode() const; 
 };

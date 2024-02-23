@@ -52,3 +52,34 @@ void node::p_println() const {
     p_print();
     std::cout << std::endl;
 }
+
+/**
+ * Creates the display of a node in a human-readable form.
+ * This creates a psuedo-json form of the node.
+ * 
+ * @return The human-readable display of a node.
+ */
+std::string node::createNodeDisplay() const {
+    string node = "";
+    node += "{\n";
+    node += "\tnodeType: ";
+
+    if(containsInt()) {
+        node += "int,\n";
+        node += "\t nodeValue: " + getInt() + '\n';
+    }
+    else {
+        node += "string,\n";
+        node += "\t nodeValue: " + getString() + '\n';
+    }
+
+    node += "}";
+    return node;
+}
+
+/**
+ * Prints the contents of a node to the standard output.
+ */
+void node::printNode() const {
+    cout << createNodeDisplay() << endl;
+}
