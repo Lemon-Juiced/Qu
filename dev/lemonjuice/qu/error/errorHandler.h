@@ -7,31 +7,31 @@ private:
 public:
     errorHandler();
 
-    void divideByZeroError(int);
+    void divisionByZero(int);
 
     void exitProgram(int);
 
-    void invalidPushError(int);
+    void invalidPush(int);
 
-    void fileExtraError(int, int);
-    void fileInvalidExtensionError(std::string);
-    void fileMissingError(int);
+    void extraFileArguments(int, int);
+    void invalidFileExtension(std::string);
+    void missingFileArgument(int);
 
-    void goToInvalidLineError(int);
+    void invalidGoto(int);
 
-    void nonIntegerReturnValueError(int);
+    void nonIntegerReturnValue(int);
 
-    void notEnoughArgumentsError(int);
+    void notEnoughArguments(int);
 
-    void operationMismatchError(int);
+    void operationMismatch(int);
 
-    void unspecifiedComparisonOperationError(int);
+    void unspecifiedComparisonOperation(int);
 
-    void printError(int);
+    void invalidPrintOperation(int);
 
-    void readError(int);
+    void invalidReadOperation(int);
 
-    void retEmptyQueueError(int); 
+    void returnFromEmptyQueue(int); 
 
     void singleBarError(int, int);
     void singleQuoteError(int, int);

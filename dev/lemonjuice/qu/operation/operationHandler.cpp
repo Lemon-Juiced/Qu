@@ -13,7 +13,7 @@ using namespace std;
 void OperationHandler::quAdd(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(line_number);
+        error_handler.notEnoughArguments(line_number);
     }
 
     node first_operand = program_queue.front();
@@ -42,7 +42,7 @@ void OperationHandler::quAdd(std::queue<node>& program_queue, int line_number, e
 void OperationHandler::quSub(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(line_number);
+        error_handler.notEnoughArguments(line_number);
     }
 
     node first_operand = program_queue.front();
@@ -56,7 +56,7 @@ void OperationHandler::quSub(std::queue<node>& program_queue, int line_number, e
         program_queue.push(node(result));
     } else {
         // Error: SUB operation is only defined for integer operands
-        error_handler.operationMismatchError(line_number);
+        error_handler.operationMismatch(line_number);
     }
 }
 
@@ -70,7 +70,7 @@ void OperationHandler::quSub(std::queue<node>& program_queue, int line_number, e
 void OperationHandler::quMul(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(line_number);
+        error_handler.notEnoughArguments(line_number);
     }
 
     node first_operand = program_queue.front();
@@ -84,7 +84,7 @@ void OperationHandler::quMul(std::queue<node>& program_queue, int line_number, e
         program_queue.push(node(result));
     } else {
         // Error: MUL operation is only defined for integer operands
-        error_handler.operationMismatchError(line_number);
+        error_handler.operationMismatch(line_number);
     }
 }
 
@@ -98,7 +98,7 @@ void OperationHandler::quMul(std::queue<node>& program_queue, int line_number, e
 void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(line_number);
+        error_handler.notEnoughArguments(line_number);
     }
 
     node first_operand = program_queue.front();
@@ -109,7 +109,7 @@ void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number, e
     if (first_operand.containsInt() && second_operand.containsInt()) {
         // Check for division by zero
         if (second_operand.getInt() == 0) {
-            error_handler.divideByZeroError(line_number);
+            error_handler.divisionByZero(line_number);
         }
 
         // Both operands are integers, perform integer division
@@ -117,7 +117,7 @@ void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number, e
         program_queue.push(node(result));
     } else {
         // Error: DIV operation is only defined for integer operands
-        error_handler.operationMismatchError(line_number);
+        error_handler.operationMismatch(line_number);
     }
 }
 
@@ -131,7 +131,7 @@ void OperationHandler::quDiv(std::queue<node>& program_queue, int line_number, e
 void OperationHandler::quMod(std::queue<node>& program_queue, int line_number, errorHandler error_handler) {
     if (program_queue.size() < 2) {
         // Ensure that there are at least two elements in the queue
-        error_handler.notEnoughArgumentsError(line_number);
+        error_handler.notEnoughArguments(line_number);
     }
 
     node first_operand = program_queue.front();
@@ -142,7 +142,7 @@ void OperationHandler::quMod(std::queue<node>& program_queue, int line_number, e
     if (first_operand.containsInt() && second_operand.containsInt()) {
         // Check for division by zero
         if (second_operand.getInt() == 0) {
-            error_handler.divideByZeroError(line_number);
+            error_handler.divisionByZero(line_number);
         }
 
         // Both operands are integers, perform integer modulus
@@ -150,6 +150,6 @@ void OperationHandler::quMod(std::queue<node>& program_queue, int line_number, e
         program_queue.push(node(result));
     } else {
         // Error: MOD operation is only defined for integer operands
-        error_handler.operationMismatchError(line_number);
+        error_handler.operationMismatch(line_number);
     }
 }

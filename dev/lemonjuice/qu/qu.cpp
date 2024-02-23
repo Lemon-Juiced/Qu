@@ -41,9 +41,9 @@ int main(int argc, char *argv[]){
     size_t last_dot_pos = file_name.find_last_of('.'); // Find the last dot in the file's name.
     if (last_dot_pos != string::npos) { // Checking if the '.' is found in the file's name.
         string file_extension = file_name.substr(last_dot_pos + 1); // Get the file's extension.
-        if(file_extension != "qu") error_handler.fileInvalidExtensionError(file_name); // Error sequence for invalid file extensions.
+        if(file_extension != "qu") error_handler.invalidFileExtension(file_name); // Error sequence for invalid file extensions.
     }
-    else error_handler.fileInvalidExtensionError(file_name); // Error sequence for invalid file extensions.
+    else error_handler.invalidFileExtension(file_name); // Error sequence for invalid file extensions.
 
     // Moves the file contents into the program.
     vector<string> program_text; // The text of the program in string vector form.
@@ -71,8 +71,8 @@ int main(int argc, char *argv[]){
 bool fileArgChecker(int argc){
     int expected_args = 2;
     if(argc != expected_args){ 
-        if (argc < expected_args) error_handler.fileMissingError(argc);
-        else error_handler.fileExtraError(argc, expected_args);
+        if (argc < expected_args) error_handler.missingFileArgument(argc);
+        else error_handler.extraFileArguments(argc, expected_args);
     }
     return true;
 }
@@ -146,7 +146,7 @@ int run(vector<string> program_text){
                     continue; // Skip the rest of the loop to avoid processing the new line again
                 } else {
                     // Error: Invalid saved position
-                    error_handler.goToInvalidLineError(i);
+                    error_handler.invalidGoto(i);
                 }
             }
 
@@ -157,7 +157,7 @@ int run(vector<string> program_text){
                 continue; // Skip the rest of the loop to avoid processing the new line again
             } else {
                 // Error: Invalid line number
-                error_handler.goToInvalidLineError(i);
+                error_handler.invalidGoto(i);
             }
         }   
 
@@ -377,7 +377,7 @@ int run(vector<string> program_text){
                     node new_node = node(push_string);
                     program_queue.push(new_node);
                 } else {
-                    error_handler.invalidPushError(i);
+                    error_handler.invalidPush(i);
                 }
             } else {
                 // If quotes are not found, treat it as an integer
@@ -388,7 +388,7 @@ int run(vector<string> program_text){
                     node new_node = node(push_int);
                     program_queue.push(new_node);
                 } else {
-                    error_handler.invalidPushError(i);
+                    error_handler.invalidPush(i);
                 }
             }
         }
@@ -439,7 +439,7 @@ int run(vector<string> program_text){
         if (current_line.find("RET") != std::string::npos) {
             // Check if the queue is empty
             if (program_queue.empty()) {
-                error_handler.retEmptyQueueError(i);
+                error_handler.returnFromEmptyQueue(i);
                 return -1; // End the program with an error code
             } else {
                 // Get the front of the queue
@@ -449,7 +449,7 @@ int run(vector<string> program_text){
                 if (front_node.containsInt()) {
                     return front_node.getInt();
                 } else {
-                    error_handler.nonIntegerReturnValueError(i);
+                    error_handler.nonIntegerReturnValue(i);
                 }
             }
         }
@@ -548,7 +548,7 @@ bool compareFirstTwo(const std::queue<node>& program_queue, string comparisonTyp
 
     // Check if there are at least two elements in the queue
     if (temp_queue.size() < 2) {
-        error_handler.notEnoughArgumentsError(line);
+        error_handler.notEnoughArguments(line);
     }
 
     // Access the first element
@@ -574,7 +574,7 @@ bool compareFirstTwo(const std::queue<node>& program_queue, string comparisonTyp
         if(first_element.getInt() != second_element.getInt()) return true;
         else return false;
     } else {
-        error_handler.unspecifiedComparisonOperationError(line);
+        error_handler.unspecifiedComparisonOperation(line);
     }
 
     return false; // Something went wrong with the comparison

@@ -26,8 +26,8 @@ void errorHandler::printError(const string& error_message) {
  * 
  * @param line The line of the error.
  */
-void errorHandler::divideByZeroError(int line){
-    printError("Division by zero at line: " + to_string(line));
+void errorHandler::divisionByZero(int line){
+    printError("Division by zero error at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -45,8 +45,8 @@ void errorHandler::exitProgram(int exitCode){
  * 
  * @param line The line of the error.
  */
-void errorHandler::invalidPushError(int line){
-    printError("Invalid PUSH on line: " + to_string(line));
+void errorHandler::invalidPush(int line){
+    printError("Invalid PUSH operation at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -56,7 +56,7 @@ void errorHandler::invalidPushError(int line){
  * @param max_arg The index of the final arg.
  * @param expected_args The expected number of args that should have been specified.
  */
-void errorHandler::fileExtraError(int max_arg, int expected_args){
+void errorHandler::extraFileArguments(int max_arg, int expected_args){
     cerr << RED_COLOR << "Error: Extra file argument(s) at index (indices): ";
     for (size_t i = expected_args; i <= max_arg; i++) {
         cerr << i;
@@ -73,8 +73,8 @@ void errorHandler::fileExtraError(int max_arg, int expected_args){
  * 
  * @param file_name The file's name.
  */
-void errorHandler::fileInvalidExtensionError(std::string file_name){
-    printError("The file: " + file_name + " is invalid.\nFile name must end in \".qu\".");
+void errorHandler::invalidFileExtension(std::string file_name){
+    printError("Invalid file extension for file: " + file_name + ". File name must end with \".qu\".");
     exitProgram(-1);
 }
 
@@ -83,7 +83,7 @@ void errorHandler::fileInvalidExtensionError(std::string file_name){
  * 
  * @param arg The index of the missing arg.
  */
-void errorHandler::fileMissingError(int arg){
+void errorHandler::missingFileArgument(int arg){
     printError("Missing file argument at index: " + to_string(arg));
     exitProgram(-1);
 }
@@ -93,8 +93,8 @@ void errorHandler::fileMissingError(int arg){
  * 
  * @param line The line of the error.
  */
-void errorHandler::goToInvalidLineError(int line){
-    printError("GOTO tried to send program to unexpected area at line: " + to_string(line));
+void errorHandler::invalidGoto(int line){
+    printError("Invalid GOTO operation at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -103,8 +103,8 @@ void errorHandler::goToInvalidLineError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::nonIntegerReturnValueError(int line){
-    printError("Tried to return value other than an integer at line: " + to_string(line));
+void errorHandler::nonIntegerReturnValue(int line){
+    printError("Invalid return value. Non-integer value returned at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -113,7 +113,7 @@ void errorHandler::nonIntegerReturnValueError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::notEnoughArgumentsError(int line){
+void errorHandler::notEnoughArguments(int line){
     printError("Missing arguments at line: " + to_string(line));
     exitProgram(-1);
 }
@@ -123,7 +123,7 @@ void errorHandler::notEnoughArgumentsError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::unspecifiedComparisonOperationError(int line){
+void errorHandler::unspecifiedComparisonOperation(int line){
     printError("An unspecified comparsion operation was used at line: " + to_string(line));
     exitProgram(-1);
 }
@@ -133,8 +133,8 @@ void errorHandler::unspecifiedComparisonOperationError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::retEmptyQueueError(int line){
-    printError("Tried to return value from an empty queue at line: " + to_string(line));
+void errorHandler::returnFromEmptyQueue(int line){
+    printError("Attempted to return value from an empty queue at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -143,8 +143,8 @@ void errorHandler::retEmptyQueueError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::operationMismatchError(int line){
-    printError("Mismatched int and string operation on line: " + to_string(line));
+void errorHandler::operationMismatch(int line){
+    printError("Incompatible operation between string and integer nodes at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -153,8 +153,8 @@ void errorHandler::operationMismatchError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::printError(int line){
-    printError("Something was attempted to be printed via PRINT that cannot be printed on line: " + to_string(line));
+void errorHandler::invalidPrintOperation(int line){
+    printError("Invalid PRINT operation at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -163,8 +163,8 @@ void errorHandler::printError(int line){
  * 
  * @param line The line of the error.
  */
-void errorHandler::readError(int line){
-    printError("Something was attempted to be read via READ that cannot be read on line: " + to_string(line));
+void errorHandler::invalidReadOperation(int line){
+    printError("Invalid READ operation at line: " + to_string(line));
     exitProgram(-1);
 }
 
@@ -175,7 +175,7 @@ void errorHandler::readError(int line){
  * @param line The line of the error.
  */
 void errorHandler::singleBarError(int index, int line){
-    printError("Single '|' on line: " + to_string(line) + " at index: " + to_string(index));
+    printError("Single '|' character at line: " + to_string(line) + ", index: " + to_string(index));
     exitProgram(-1);
 }
 
@@ -186,7 +186,7 @@ void errorHandler::singleBarError(int index, int line){
  * @param line The line of the error.
  */
 void errorHandler::singleQuoteError(int index, int line){
-    printError("Single '\"' on line: " + to_string(line) + " at index: " + to_string(index));
+    printError("Single '\"' character at line: " + to_string(line) + ", index: " + to_string(index));
     exitProgram(-1);
 }
 
@@ -196,6 +196,6 @@ void errorHandler::singleQuoteError(int index, int line){
  * @param line The line of the error.
  */
 void errorHandler::unknownInstruction(int line){
-    printError("Unknown instruction on line: " + to_string(line));
+    printError("Unknown instruction at line: " + to_string(line));
     exitProgram(-1);
 }
