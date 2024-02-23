@@ -60,17 +60,17 @@ void node::p_println() const {
  * @return The human-readable display of a node.
  */
 std::string node::createNodeDisplay() const {
-    string node = "";
+    std::string node = "";
     node += "{\n";
-    node += "\tnodeType: ";
+    node += "\t\"nodeType\": ";
 
     if(containsInt()) {
-        node += "int,\n";
-        node += "\t nodeValue: " + getInt() + '\n';
+        node += "\"int\",\n";
+        node += "\t\"nodeValue\": " + std::to_string(getInt()) + "\n";
     }
     else {
-        node += "string,\n";
-        node += "\t nodeValue: " + getString() + '\n';
+        node += "\"string\",\n";
+        node += "\t\"nodeValue\": \"" + getString() + "\"\n";
     }
 
     node += "}";
